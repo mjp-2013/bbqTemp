@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/bbqTemp">
+<Resource name="jdbc/bbqdb" auth="Container"
+          type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
+          url="jdbc:postgresql://192.168.0.5:5432/bbqtemp"
+          username="bbqtemp" password="bbqtemp" maxActive="20" maxIdle="10" maxWait="-1"/>
+</Context>
