@@ -41,7 +41,7 @@ public class DB
 
     /**
      * Initializes DataSouce in static block. Looks datasouce from JNDI context
-     * via java:/comp/env/jdbc/bbqdb context name.
+     * via java:/comp/env/jdbc/bbqdb context name (or other name found from configurations).
      */
     static
     {
@@ -50,11 +50,12 @@ public class DB
             InitialContext cxt = new InitialContext();
             if ( cxt == null )
             {
-
+                
                 logger.fatal( "Inital context not found." );
-
+                //TODO raise exception
             }
 
+            //TODO datasouce name from config...
             dataSource = ( DataSource ) cxt.lookup( "java:/comp/env/jdbc/bbqdb" );
 
             logger.debug( "Datasource obtained:" + dataSource );
@@ -62,6 +63,7 @@ public class DB
             {
 
                 logger.fatal( "Datasource not found." );
+                //TODO raise exception..
             }
         }
         catch ( NamingException ex )
