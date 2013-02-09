@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 @WebServlet(name = "BBQTemp", urlPatterns =
 {
-    "/BBQTemp"
+    "/BBQTemp" 
 })
 public class BBQTemp extends HttpServlet
 {
