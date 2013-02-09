@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 M.Pitkänen
+ * Copyright 2013 M.J.Pitkänen
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  *
- * @author Mikko
+ * @author MjP
  */
 public class FanDevice
 {
@@ -39,40 +39,49 @@ public class FanDevice
      */
     final GpioController gpioController = GpioFactory.getInstance();
 
-    
     /**
-     * 
-     * @param bbqTempConfig 
+     *
+     * @param bbqTempConfig
      */
     public FanDevice( Configuration bbqTempConfig )
     {
         //TODO PIN FROM CONFIGURATION
         Pin fanPinNumber = RaspiPin.GPIO_00;
-              
+
         // sets selected pin to output mode and set pins state to low. 
-        this.fanIO = gpioController.provisionDigitalOutputPin(fanPinNumber ,"BBQ Fan 1", PinState.LOW);   
+        this.fanIO = gpioController.provisionDigitalOutputPin( fanPinNumber, "BBQ Fan 1", PinState.LOW );
     }
-    
-    /**
-     * Starts fan
+
+     /*
+     * Starts the fan if it is stopped. Otherwise the state is not changed.
      */
     public void startFan()
     {
-        
+        if ( fanIO.isLow() )
+        {
+            fanIO.high();
+        }
+
     }
-    
+
+    /*
+     * Stops the fan if it is running. Otherwise the state is not changed.
+     */
     public void stopFan()
     {
-        
+           if ( fanIO.isHigh() )
+        {
+            fanIO.low();
+        }
     }
-    
+
     /**
      * Returns fan state low or high (off or on)
-     * @return 
+     *
+     * @return Fan state as PinSate.
      */
     public PinState getFanState()
     {
         return this.gpioController.getState( this.fanIO );
     }
-    
 }
