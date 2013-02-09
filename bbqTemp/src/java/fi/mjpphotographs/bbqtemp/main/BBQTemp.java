@@ -156,6 +156,6 @@ public class BBQTemp extends HttpServlet
     @Override
     public String getServletInfo()
     {
-        return "Short description";
+        return "BBQTemp started servlet (starts poller and control thread and initializes db, logger and configurations). ";
     }// </editor-fold>
 }
