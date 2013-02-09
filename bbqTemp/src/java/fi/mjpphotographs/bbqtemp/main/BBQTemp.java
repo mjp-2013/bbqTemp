@@ -33,13 +33,13 @@ import org.apache.log4j.Logger;
  */
 @WebServlet(name = "BBQTemp", urlPatterns =
 {
-    "/BBQTemp" 
+    "/BBQTemp"
 })
 public class BBQTemp extends HttpServlet
 {
 
     static Logger logger = Logger.getLogger( BBQTemp.class );
-    private DataLogger dataLogger;
+    private DataLogger dataLogger; 
 
     /**
      * Inits db, configurations, device controllers etc.
@@ -76,8 +76,7 @@ public class BBQTemp extends HttpServlet
         {
             dataLogger.startPolling();
             try
-            {
-                
+            {  
                 out.println( "<html>" );
                 out.println( "<head>" );
                 out.println( "<title>BBQ Temp</title>" );
