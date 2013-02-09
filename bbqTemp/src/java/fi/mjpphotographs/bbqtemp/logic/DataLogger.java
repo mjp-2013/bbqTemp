@@ -44,6 +44,8 @@ public class DataLogger implements Runnable
     private final Thread t;
     private volatile boolean threadRun = false;
     private TemperatureDAO tempDAO;
+    private Configuration bbqTempConfig= null;
+    
 
     /**
      * Tells if this object thread is running.
@@ -71,7 +73,7 @@ public class DataLogger implements Runnable
         builder.setFile( new File( "bbq-config.xml" ) );
         try       
         {
-            Configuration config = builder.getConfiguration( true );
+            bbqTempConfig = builder.getConfiguration( true );
  
         }
         catch ( ConfigurationException ex )
