@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 M.Pitkänen
+ * Copyright 2013 M.J.Pitkänen
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ public class BBQTemp extends HttpServlet
 {
 
     static Logger logger = Logger.getLogger( BBQTemp.class );
-    private DataLogger dataLogger; 
+    private DataLogger dataLogger;
 
     /**
      * Inits db, configurations, device controllers etc.
@@ -76,7 +76,7 @@ public class BBQTemp extends HttpServlet
         {
             dataLogger.startPolling();
             try
-            {  
+            {
                 out.println( "<html>" );
                 out.println( "<head>" );
                 out.println( "<title>BBQ Temp</title>" );
@@ -158,4 +158,12 @@ public class BBQTemp extends HttpServlet
     {
         return "BBQTemp started servlet (starts poller and control thread and initializes db, logger and configurations). ";
     }// </editor-fold>
+
+    public void destroy()
+    {
+        logger.info("BBQTemp shutdown in process...");
+        dataLogger.stopPolling();
+        dataLogger = null;
+        logger.info("BBQTemp shutdown completed.");
+    }
 }
