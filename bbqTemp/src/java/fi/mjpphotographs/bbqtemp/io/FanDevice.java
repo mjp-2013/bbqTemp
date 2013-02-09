@@ -38,8 +38,31 @@ public class FanDevice
      */
     final GpioController gpioController = GpioFactory.getInstance();
 
+    
+    /**
+     * 
+     * @param bbqTempConfig 
+     */
     public FanDevice( Configuration bbqTempConfig )
     {
-        fanIO = gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_00 ,"Blower fan", PinState.LOW);   
+        this.fanIO = gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_00 ,"Blower fan", PinState.LOW);   
     }
+    
+    /**
+     * Starts fan
+     */
+    public void startFan()
+    {
+        
+    }
+    
+    /**
+     * Returns fan state low or high (off or on)
+     * @return 
+     */
+    public PinState getFanState()
+    {
+        return this.gpioController.getState( this.fanIO );
+    }
+    
 }
