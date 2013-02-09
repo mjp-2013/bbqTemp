@@ -39,7 +39,9 @@ public class DB
     
 static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( Class.class.getName() );
     
-
+    /**
+     * Initializes DataSouce in static block. Looks datasouce from JNDI context via java:/comp/env/jdbc/bbqdb context name. 
+     */
     static
     {
         try
@@ -61,19 +63,19 @@ static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( Class
         }
         catch ( NamingException ex )
         {
+            
            logger.fatal("Inital Context not found.", ex); 
+           //TODO Raise correct exception to halt program execution.
         }
         
         
     }
 
-  
-            
-            
-            
-
-            
-    
+         
+    /**
+     * Returns active database connection from initialized DataSource object.
+     * @return Connection object.
+     */
     public static Connection getConnection()
     {
         Connection conn = null;
@@ -86,6 +88,7 @@ static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( Class
             catch ( SQLException sqle )
             {
                 logger.fatal("Connection not found:" + sqle);
+                //TODO raise correct exception. Freeze program or try again...
             }
         }
         
@@ -93,6 +96,10 @@ static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( Class
         return conn;
     }
 
+    /**
+     * Closes supplied connection object. If error occured during closing (exception is raised) the Connection object is assigend as null.
+     * @param conn Connection object to be closed. 
+     */
     public static void closeConnection( Connection conn )
     {
         if ( conn != null )
@@ -103,7 +110,7 @@ static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( Class
             }
             catch ( SQLException ex )
             {
-                //log4j
+                logger.fatal("Exception occured while closing connection.", ex); 
             }
             finally
             {
