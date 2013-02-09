@@ -18,6 +18,7 @@ package fi.mjpphotographs.bbqtemp.io;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import org.apache.commons.configuration.Configuration;
@@ -45,13 +46,22 @@ public class FanDevice
      */
     public FanDevice( Configuration bbqTempConfig )
     {
-        this.fanIO = gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_00 ,"Blower fan", PinState.LOW);   
+        //TODO PIN FROM CONFIGURATION
+        Pin fanPinNumber = RaspiPin.GPIO_00;
+              
+        // sets selected pin to output mode and set pins state to low. 
+        this.fanIO = gpioController.provisionDigitalOutputPin(fanPinNumber ,"BBQ Fan 1", PinState.LOW);   
     }
     
     /**
      * Starts fan
      */
     public void startFan()
+    {
+        
+    }
+    
+    public void stopFan()
     {
         
     }
