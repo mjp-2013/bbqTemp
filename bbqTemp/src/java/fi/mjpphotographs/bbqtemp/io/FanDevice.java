@@ -21,35 +21,48 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import fi.mjpphotographs.bbqtemp.logic.DataLogger;
 import org.apache.commons.configuration.Configuration;
+import org.apache.log4j.Logger;
 
 /**
- *
+ * Fan control via pi4j.
  * @author MjP
  */
 public class FanDevice
 {
 
+    //TODO EXCEPTIONS 
+    
+      static Logger logger = Logger.getLogger( FanDevice.class );
+    
     /**
      * Controls fan pin.
      */
     private GpioPinDigitalOutput fanIO = null;
     /**
-     * Instance to GPIO controls from factory
+     * Instance to GPIO controller from factory
      */
     final GpioController gpioController = GpioFactory.getInstance();
 
     /**
-     *
+     * Constructs fan device object.
      * @param bbqTempConfig
      */
     public FanDevice( Configuration bbqTempConfig )
     {
+        logger.debug( "FanDevice initialization started." );
         //TODO PIN FROM CONFIGURATION
         Pin fanPinNumber = RaspiPin.GPIO_00;
 
+         logger.debug( "FanDevice Pin set" );
+        
+        //todo read calibration from config
+        
         // sets selected pin to output mode and set pins state to low. 
         this.fanIO = gpioController.provisionDigitalOutputPin( fanPinNumber, "BBQ Fan 1", PinState.LOW );
+        logger.debug( "FanIO GPIO contoller set as output and state as low." );
+    
     }
 
      /*

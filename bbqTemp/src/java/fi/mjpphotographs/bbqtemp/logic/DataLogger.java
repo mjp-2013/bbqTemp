@@ -13,8 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-
 package fi.mjpphotographs.bbqtemp.logic;
 
 import fi.mjpphotographs.bbqtemp.db.dao.DAOException;
@@ -44,11 +42,11 @@ public class DataLogger implements Runnable
     private final Thread t;
     private volatile boolean threadRun = false;
     private TemperatureDAO tempDAO;
-    private Configuration bbqTempConfig= null;
-    
+    private Configuration bbqTempConfig = null;
+    private ControlEngine fanControlEngine = null;
 
     /**
-     * Tells if this object thread is running.
+     * Tells if Datalogger/logic thread is running.
      *
      * @return
      */
@@ -57,53 +55,81 @@ public class DataLogger implements Runnable
         return this.threadRun;
     }
 
+    /**
+     * Starts poller thread.
+     */
     public void startPolling()
     {
         t.start();
     }
 
+    /**
+     * Stops poller thread from running.
+     */
     public void stopPolling()
     {
         threadRun = false;
     }
 
-    public DataLogger()
+    public DataLogger( File bbqConfigFilePath )
     {
         DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        builder.setFile( new File( "bbq-config.xml" ) );
-        try       
+
+
+        //TODO SEVERE config files need to be in home directory. This must be fixed to point meta-inf or web-inf directory...
+
+        builder.setFile( bbqConfigFilePath );
+        try
         {
             bbqTempConfig = builder.getConfiguration( true );
- 
+
         }
         catch ( ConfigurationException ex )
         {
             logger.error( "Cannot read XML configuration file.", ex );
-            throw new IllegalArgumentException ("Cannot read XML configuration file. Consult logs for more information", ex);
+            throw new IllegalArgumentException( "Cannot read XML configuration file. Consult logs for more information", ex );
         }
 
-      
+        logger.error( "Configurations loaded succesfully." );
+
 
         tempDAO = new TemperatureDaoImpl();
+        logger.error( "Temperature DAO loaded succesfully." );
+
+        //TODO possible changeable implementation for different devices (select implementation by configuration and class loader)
+        /*
+         * Creates new Fan control object. 
+         */
+        fanControlEngine = new FanControl();
+        logger.error( "FanControl loaded succesfully." );
 
         t = new Thread( this, "bbqPollerThread" );
+        logger.error( "Poller thread initialized succesfully." );
     }
 
     @Override
     public void run()
     {
+        logger.debug( "Datalogger polling thread entered to run state." );
+
         threadRun = true;
         TemperatureDevice tempDevice = new Max31855( 0 );
 
+        logger.debug( "Temperature device MAX31855 initialized." );
+
+
+        fanControlEngine.initControlEngine( bbqTempConfig, tempDAO );
+        
+        logger.debug( "FanControl enige initialized correctly." );
 
         while ( threadRun )
         {
             Temperature tempData = tempDevice.getTemperature();
             try
             {
-                // Check for configuraiotn if additional sensors are on
-                // ADD meat Sensor(s)
-                // ADD ambient sensor
+                // TODO Check for configuraiotn if additional sensors are on
+                // TODO ADD meat Sensor(s)
+                // TODO ADD ambient sensor
 
                 tempDAO.insertTemperature( tempData );
             }
@@ -111,6 +137,9 @@ public class DataLogger implements Runnable
             {
                 logger.error( "Error occured while storing temperature data to persistent storage", ex );
             }
+
+            //starts and stops the device by its implementation.
+            fanControlEngine.handleDevice();
 
             try
             {

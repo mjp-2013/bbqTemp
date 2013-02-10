@@ -16,9 +16,13 @@
 package fi.mjpphotographs.bbqtemp.main;
 
 import fi.mjpphotographs.bbqtemp.logic.DataLogger;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.util.logging.Level;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,7 +56,22 @@ public class BBQTemp extends HttpServlet
     {
         super.init( config );
         // myLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00 ,"My LED", PinState.LOW);   
-        dataLogger = new DataLogger();
+        
+        
+        ServletContext context = getServletContext();
+        File bbqConfigFilePath =null;
+   
+            String path1= getServletContext().getRealPath( "/");
+            
+            bbqConfigFilePath = new File(  path1 +  "/WEB-INF/conf/bbq-config.xml");
+            
+            
+            logger.debug("path:" + bbqConfigFilePath);
+        
+  
+         
+        
+        dataLogger = new DataLogger(bbqConfigFilePath);
     }
 
     /**
