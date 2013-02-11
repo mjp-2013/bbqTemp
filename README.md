@@ -12,4 +12,4 @@ SPI and thermocouple sensor(s),
 Database (postgresql)
 
 
-Should be usable in summer 2013
+Should be usable in summer 2013 (fan on / off on hardcoded temperature works now atleast)
