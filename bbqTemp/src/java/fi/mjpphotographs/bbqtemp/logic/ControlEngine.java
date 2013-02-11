@@ -44,4 +44,9 @@ public interface ControlEngine
      * @return Returns true if Control engine is initialized correctly.
      */
     public boolean isInitialized();
+    
+    /**
+     * Shutdowns the device.
+     */
+    public void shutDown ();
 }

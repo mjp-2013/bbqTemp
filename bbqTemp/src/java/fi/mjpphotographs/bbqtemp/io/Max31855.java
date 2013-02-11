@@ -51,7 +51,7 @@ public class Max31855 implements TemperatureDevice
             try
             {
                 String tempValues;
-
+                // TODO replace with pi4j
                 // deprecated, need to fix this...
                 tempValues = dataInputStream.readLine();
 
@@ -60,8 +60,8 @@ public class Max31855 implements TemperatureDevice
                     float rj;
                     float mj;
                     int position = tempValues.indexOf( ":" );
-                    rj = Float.parseFloat( tempValues.substring( 0, position - 1 ) );
-                    mj = Float.parseFloat( tempValues.substring( position + 1 ) );
+                    mj = Float.parseFloat( tempValues.substring( 0, position - 1 ) );
+                    rj = Float.parseFloat( tempValues.substring( position + 1 ) );
 
                     tempData.setMjTemperature( mj );
                     tempData.setRjTemperature( rj );

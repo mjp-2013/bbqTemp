@@ -30,10 +30,10 @@ public interface TemperatureDAO
    
     public void insertTemperature ( Temperature temperature) throws DAOException;
     
-    public Temperature getLatestTemperature();
+    public Temperature getLatestTemperature() throws DAOException;;
     
-    public ArrayList<Temperature> getTemperatures(int amount);
+    public ArrayList<Temperature> getTemperatures(int amount) throws DAOException;;
     
-    public ArrayList<Temperature> getTemperatures(Date start, Date end);
+    public ArrayList<Temperature> getTemperatures(Date start, Date end) throws DAOException;;
        
 }

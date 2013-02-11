@@ -27,6 +27,20 @@ public class Temperature
 
     public Temperature(){}
     
+    public Temperature (float mjTemperature, float rjTemperature, float ambientTemperature, Date logDatatime ) {
+        this.mjTemperature = mjTemperature;
+        this.rjTemperature = rjTemperature;
+        this.ambientTemperature = ambientTemperature;
+        this.logDatatime = logDatatime;
+        
+    
+    }
+    
+    /**
+     * Key value pair of multiple sensor data. First one is temperature sensor
+     * identifier and second is float value of temperature.
+     */
+    private HashMap temperatures;
     
     /**
      * Thermocouple measuring temperature
@@ -65,11 +79,7 @@ public class Temperature
     }
     
     
-    /**
-     * Key value pair of multiple sensor data. First one is temperature sensor
-     * identifier and second is float value of temperature.
-     */
-    private HashMap temperatures;
+    
     
     public float getMjTemperature()
     {

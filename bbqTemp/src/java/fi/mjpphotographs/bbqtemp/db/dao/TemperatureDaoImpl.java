@@ -42,12 +42,73 @@ public class TemperatureDaoImpl implements TemperatureDAO
      * database.
      */
     static final String SQL_INSERT_TEMPERATURE_LOG_DATA = "insert into templog (mjTemp, rjTemp, ambientTemp, loggedTime) values (?,?,?,?)";
+    static final String SQL_SELECT_LATEST_TEMPERATURE = "select * from templog order by id desc limit 1";
     static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( TemperatureDaoImpl.class );
 
     @Override
-    public Temperature getLatestTemperature()
+    public Temperature getLatestTemperature() throws DAOException
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        Connection conn = DB.getConnection();
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        Temperature temperature = null;
+
+        try
+        {
+
+
+            ps = conn.prepareStatement( SQL_SELECT_LATEST_TEMPERATURE );
+
+            resultSet = ps.executeQuery();
+
+            if ( resultSet.next() )
+            {
+                float mjTemp = resultSet.getFloat( "mjtemp" );
+                float rjTemp = resultSet.getFloat( "rjtemp" );
+                float ambientTemp = resultSet.getFloat( "ambienttemp" );
+                Date logDatetime = new java.util.Date( resultSet.getDate( "loggedtime" ).getTime() );
+
+                temperature = new Temperature( mjTemp, rjTemp, ambientTemp, logDatetime);
+            }
+
+        }
+        catch ( SQLException ex )
+        {
+            throw new DAOException( "SQL Exception occured during inserting temperature data into database.", ex );
+        }
+        finally
+        {
+
+            if ( resultSet != null )
+            {
+                try
+                {
+                    resultSet.close();
+                }
+                catch ( SQLException ex )
+                {
+                    throw new DAOException( "Error occured while closing resultset object.", ex );
+                }
+            }
+
+            if ( ps != null )
+            {
+                try
+                {
+                    ps.close();
+                }
+                catch ( SQLException ex )
+                {
+                    throw new DAOException( "Error occured while closing prepared statement object", ex );
+                }
+            }
+
+            DB.closeConnection( conn );
+
+        }
+
+        return temperature;
+
     }
 
     @Override
@@ -76,14 +137,14 @@ public class TemperatureDaoImpl implements TemperatureDAO
             Connection conn = DB.getConnection();
             PreparedStatement ps = null;
             ResultSet generatedKeys = null;
-            
+
             try
             {
-            //@todo NULL CHECK FOR VALUES HERE!!!!
+                //@todo NULL CHECK FOR VALUES HERE!!!!
 
-                ps = conn.prepareStatement( SQL_INSERT_TEMPERATURE_LOG_DATA,Statement.RETURN_GENERATED_KEYS );
+                ps = conn.prepareStatement( SQL_INSERT_TEMPERATURE_LOG_DATA, Statement.RETURN_GENERATED_KEYS );
                 ps.setDouble( 1, temperature.getMjTemperature() );
-                ps.setDouble( 2, temperature.getMjTemperature() );
+                ps.setDouble( 2, temperature.getRjTemperature() );
                 ps.setDouble( 3, temperature.getAmbientTemperature() );
                 ps.setDate( 4, new java.sql.Date( temperature.getLogDatatime().getTime() ) );
 
@@ -97,13 +158,13 @@ public class TemperatureDaoImpl implements TemperatureDAO
                 generatedKeys = ps.getGeneratedKeys();
                 if ( generatedKeys.next() )
                 {
-                   logger.debug( "Temperature datas inserted into database. RowID was:" + generatedKeys.getLong(1) ); 
+                    logger.debug( "Temperature datas inserted into database. RowID was:" + generatedKeys.getLong( 1 ) );
                 }
                 else
                 {
                     throw new SQLException( "Creating user failed, no generated key obtained." );
                 }
- 
+
             }
             catch ( SQLException ex )
             {
@@ -112,7 +173,7 @@ public class TemperatureDaoImpl implements TemperatureDAO
             finally
             {
 
-                if (generatedKeys != null)
+                if ( generatedKeys != null )
                 {
                     try
                     {
@@ -123,7 +184,7 @@ public class TemperatureDaoImpl implements TemperatureDAO
                         throw new DAOException( "Error occured while closing resultset object.", ex );
                     }
                 }
-                
+
                 if ( ps != null )
                 {
                     try

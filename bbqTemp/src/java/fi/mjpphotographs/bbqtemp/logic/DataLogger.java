@@ -39,7 +39,9 @@ public class DataLogger implements Runnable
 {
 
     static Logger logger = Logger.getLogger( DataLogger.class );
-    private final Thread t;
+    //private final Thread t;
+    private Thread t;
+    
     private volatile boolean threadRun = false;
     private TemperatureDAO tempDAO;
     private Configuration bbqTempConfig = null;
@@ -69,6 +71,25 @@ public class DataLogger implements Runnable
     public void stopPolling()
     {
         threadRun = false;
+        
+        logger.debug("Thread stop polling called.");
+        
+        t.interrupt();
+
+        // Wait until the thread exits
+        try
+        {
+            t.join();
+            logger.debug("Thread join executed");
+        }
+        catch ( InterruptedException ex )
+        {
+         
+            logger.error("BBQ Thread shutdown failed.");
+            
+            //System.exit( 1 );
+        }
+        t= null;
     }
 
     public DataLogger( File bbqConfigFilePath )
@@ -119,7 +140,7 @@ public class DataLogger implements Runnable
 
 
         fanControlEngine.initControlEngine( bbqTempConfig, tempDAO );
-        
+
         logger.debug( "FanControl enige initialized correctly." );
 
         while ( threadRun )
@@ -147,10 +168,12 @@ public class DataLogger implements Runnable
             }
             catch ( InterruptedException ie )
             {
-                //loggia
+                logger.error( "Thread interrupted.", ie );
             }
 
         }
 
+        // when thread exists shutdown the ControlEngine and clean everything.
+        fanControlEngine.shutDown();
     }
 }
