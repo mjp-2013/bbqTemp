@@ -17,7 +17,6 @@ package fi.mjpphotographs.bbqtemp.io;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.Date;
 import org.apache.log4j.Logger;
 
 /**
