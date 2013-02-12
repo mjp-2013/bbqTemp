@@ -19,7 +19,6 @@ import fi.mjpphotographs.bbqtemp.db.dao.DAOException;
 import fi.mjpphotographs.bbqtemp.db.dao.TemperatureDAO;
 import fi.mjpphotographs.bbqtemp.io.FanDevice;
 import fi.mjpphotographs.bbqtemp.io.Temperature;
-import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 
@@ -111,7 +110,7 @@ public class FanControl implements ControlEngine
         }
         
         
-        //TODO Logic to Turn fan on or off if needed
+        //TODO better logic
         
         
         if (null != temperature && temperature.getMjTemperature() < this.maxTemperature )
@@ -131,9 +130,7 @@ public class FanControl implements ControlEngine
             throw new IllegalArgumentException ("Temperature object was null");
             
         }
-        
-        
-        
+  
     }
 
   
