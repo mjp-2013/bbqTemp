@@ -19,11 +19,8 @@ import fi.mjpphotographs.bbqtemp.logic.DataLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -56,22 +53,22 @@ public class BBQTemp extends HttpServlet
     {
         super.init( config );
         // myLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00 ,"My LED", PinState.LOW);   
-        
-        
+
+
         ServletContext context = getServletContext();
-        File bbqConfigFilePath =null;
-   
-            String path1= getServletContext().getRealPath( "/");
-            
-            bbqConfigFilePath = new File(  path1 +  "/WEB-INF/conf/bbq-config.xml");
-            
-            
-            logger.debug("path:" + bbqConfigFilePath);
-        
-  
-         
-        
-        dataLogger = new DataLogger(bbqConfigFilePath);
+        File bbqConfigFilePath = null;
+
+        String path1 = getServletContext().getRealPath( "/" );
+
+        bbqConfigFilePath = new File( path1 + "/WEB-INF/conf/bbq-config.xml" );
+
+
+        logger.debug( "path:" + bbqConfigFilePath );
+
+
+
+
+        dataLogger = new DataLogger( bbqConfigFilePath );
     }
 
     /**
@@ -180,9 +177,9 @@ public class BBQTemp extends HttpServlet
 
     public void destroy()
     {
-        logger.info("BBQTemp shutdown in process...");
+        logger.info( "BBQTemp shutdown in process..." );
         dataLogger.stopPolling();
         dataLogger = null;
-        logger.info("BBQTemp shutdown completed.");
+        logger.info( "BBQTemp shutdown completed." );
     }
 }
