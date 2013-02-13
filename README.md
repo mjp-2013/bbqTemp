@@ -11,5 +11,6 @@ GPIO with darlington driver,
 SPI and thermocouple sensor(s),
 Database (postgresql)
 
+Target is to make standalone software for RPI (filebased db, integrated application server etc).
 
 Should be usable in summer 2013 (fan on / off on hardcoded temperature works now atleast)
