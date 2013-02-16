@@ -21,14 +21,7 @@ import fi.mjpphotographs.bbqtemp.db.dao.TemperatureDaoImpl;
 import fi.mjpphotographs.bbqtemp.io.Max31855;
 import fi.mjpphotographs.bbqtemp.io.Temperature;
 import fi.mjpphotographs.bbqtemp.io.TemperatureDevice;
-import java.io.File;
-import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-
-
-
-import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.log4j.Logger;
 
 /**
@@ -92,40 +85,22 @@ public class DataLogger implements Runnable
         t= null;
     }
 
-    public DataLogger( File bbqConfigFilePath )
+    public DataLogger( Configuration bbqTempConfig )
     {
-        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-
-
-        //TODO SEVERE config files need to be in home directory. This must be fixed to point meta-inf or web-inf directory...
-
-        builder.setFile( bbqConfigFilePath );
-        try
-        {
-            bbqTempConfig = builder.getConfiguration( true );
-
-        }
-        catch ( ConfigurationException ex )
-        {
-            logger.error( "Cannot read XML configuration file.", ex );
-            throw new IllegalArgumentException( "Cannot read XML configuration file. Consult logs for more information", ex );
-        }
-
-        logger.error( "Configurations loaded succesfully." );
-
+       this.bbqTempConfig = bbqTempConfig;
 
         tempDAO = new TemperatureDaoImpl();
-        logger.error( "Temperature DAO loaded succesfully." );
+        logger.debug( "Temperature DAO loaded succesfully." );
 
         //TODO possible changeable implementation for different devices (select implementation by configuration and class loader)
         /*
          * Creates new Fan control object. 
          */
         fanControlEngine = new FanControl();
-        logger.error( "FanControl loaded succesfully." );
+        logger.debug( "FanControl loaded succesfully." );
 
         t = new Thread( this, "bbqPollerThread" );
-        logger.error( "Poller thread initialized succesfully." );
+        logger.debug( "Poller thread initialized succesfully." );
     }
 
     @Override

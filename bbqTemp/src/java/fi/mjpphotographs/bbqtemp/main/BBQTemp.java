@@ -41,6 +41,7 @@ public class BBQTemp extends HttpServlet
 
     static Logger logger = Logger.getLogger( BBQTemp.class );
     private DataLogger dataLogger;
+    private JsonHandler jsonHandler;
 
     /**
      * Inits db, configurations, device controllers etc.
@@ -65,10 +66,13 @@ public class BBQTemp extends HttpServlet
 
         logger.debug( "path:" + bbqConfigFilePath );
 
+        // Help to load config object.
+        ConfigHelper configHelper = new ConfigHelper( bbqConfigFilePath );
 
+        dataLogger = new DataLogger( configHelper.getConfiguration() );
 
-
-        dataLogger = new DataLogger( bbqConfigFilePath );
+        // used for executing Json requests.
+        jsonHandler = new JsonHandler( configHelper.getConfiguration() );
     }
 
     /**
@@ -85,49 +89,59 @@ public class BBQTemp extends HttpServlet
             throws ServletException, IOException
     {
 
-        response.setContentType( "text/html;charset=UTF-8" );
 
-        PrintWriter out = response.getWriter();
-        if ( !dataLogger.isPolling() )
+        // TODO tämä uusiks... jos ei JSON niin sit käynnistyy poller, muuten normi setit. 
+
+
+
+        if ( null != request.getParameter( "json" ) )
         {
-            dataLogger.startPolling();
-            try
-            {
-                out.println( "<html>" );
-                out.println( "<head>" );
-                out.println( "<title>BBQ Temp</title>" );
-                out.println( "</head>" );
-                out.println( "<body>" );
-                out.println( "<h1>BBQTemp initalized correctly.</h1>" );
-                out.println( "</body>" );
-                out.println( "</html>" );
-            }
-            finally
-            {
-                out.close();
-            }
+            jsonHandler.executeRequest( request, response );
         }
         else
         {
-            try
+            response.setContentType( "text/html;charset=UTF-8" );
+            PrintWriter out = response.getWriter();
+            if ( !dataLogger.isPolling() )
             {
-                out.println( "<html>" );
-                out.println( "<head>" );
-                out.println( "<title>BBQ Temp</title>" );
-                out.println( "</head>" );
-                out.println( "<body>" );
-                out.println( "<h1>Datalogger thread is already up and running.</h1>" );
-                out.println( "</body>" );
-                out.println( "</html>" );
+                dataLogger.startPolling();
+                try
+                {
+                    out.println( "<html>" );
+                    out.println( "<head>" );
+                    out.println( "<title>BBQ Temp</title>" );
+                    out.println( "</head>" );
+                    out.println( "<body>" );
+                    out.println( "<h1>BBQTemp initalized correctly.</h1>" );
+                    out.println( "</body>" );
+                    out.println( "</html>" );
+                }
+                finally
+                {
+                    out.close();
+                }
             }
-            finally
+            else
             {
-                out.close();
+                try
+                {
+                    out.println( "<html>" );
+                    out.println( "<head>" );
+                    out.println( "<title>BBQ Temp</title>" );
+                    out.println( "</head>" );
+                    out.println( "<body>" );
+                    out.println( "<h1>Datalogger thread is already up and running.</h1>" );
+                    out.println( "</body>" );
+                    out.println( "</html>" );
+                }
+                finally
+                {
+                    out.close();
+                }
+
             }
 
         }
-
-
 
     }
 

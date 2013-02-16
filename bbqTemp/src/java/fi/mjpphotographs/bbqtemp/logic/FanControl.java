@@ -74,9 +74,12 @@ public class FanControl implements ControlEngine
             this.bbqTempConfig = bbqTempConfig;
             fan = new FanDevice( this.bbqTempConfig );   
             logger.debug( "Fan Device initalized." );
-            //TODO get max and min values from config
-            maxTemperature = 30;
-            targetTemperature = 28;
+            
+            maxTemperature = bbqTempConfig.getFloat( "max_temperature");
+            targetTemperature = bbqTempConfig.getFloat( "target_temperature");
+            
+            logger.debug ("Max temperature set from configuration:" + maxTemperature );
+            logger.debug ("Targett emperature set from configuration:" + targetTemperature );
             
             // refrence to TemperatureDAO object.
             this.tempDAO  =tempDAO;

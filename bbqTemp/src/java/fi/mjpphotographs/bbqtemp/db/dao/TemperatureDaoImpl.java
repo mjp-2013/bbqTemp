@@ -22,10 +22,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -42,33 +41,51 @@ public class TemperatureDaoImpl implements TemperatureDAO
      * database.
      */
     static final String SQL_INSERT_TEMPERATURE_LOG_DATA = "insert into templog (mjTemp, rjTemp, ambientTemp, loggedTime) values (?,?,?,?)";
-    static final String SQL_SELECT_LATEST_TEMPERATURE = "select * from templog order by id desc limit 1";
+    static final String SQL_SELECT_AMOUNT_LATEST_TEMPERATURES = "select * from templog order by id desc limit ?";
+    static final String SQL_SELECT_DATERANGE_LATEST_TEMPERATURES = "select * from templog WHERE loggedtime BETWEEN CAST(? AS timestamp) AND CAST(? AS timestamp) order by id desc";
     static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( TemperatureDaoImpl.class );
 
     @Override
     public Temperature getLatestTemperature() throws DAOException
     {
+        ArrayList<Temperature> temperatures = getTemperatures( 1 );
+
+        if ( temperatures.isEmpty() )
+        {
+            return new Temperature();
+        }
+        else
+        {
+            return ( Temperature ) temperatures.get( 0 );
+        }
+    }
+
+    @Override
+    public ArrayList<Temperature> getTemperatures( int amount ) throws DAOException
+    {
         Connection conn = DB.getConnection();
         PreparedStatement ps = null;
         ResultSet resultSet = null;
-        Temperature temperature = null;
+        ArrayList temperatures = new ArrayList();
 
         try
         {
 
-
-            ps = conn.prepareStatement( SQL_SELECT_LATEST_TEMPERATURE );
-
+            ps = conn.prepareStatement( SQL_SELECT_AMOUNT_LATEST_TEMPERATURES );
+            ps.setInt( 1, amount );
             resultSet = ps.executeQuery();
 
-            if ( resultSet.next() )
+            while ( resultSet.next() )
             {
+
+                long id = resultSet.getLong( "id" );
                 float mjTemp = resultSet.getFloat( "mjtemp" );
                 float rjTemp = resultSet.getFloat( "rjtemp" );
                 float ambientTemp = resultSet.getFloat( "ambienttemp" );
-                Date logDatetime = new java.util.Date( resultSet.getDate( "loggedtime" ).getTime() );
+                Date logDatetime = new java.util.Date( resultSet.getTimestamp( "loggedtime" ).getTime() );
 
-                temperature = new Temperature( mjTemp, rjTemp, ambientTemp, logDatetime);
+                Temperature temperature = new Temperature( id, mjTemp, rjTemp, ambientTemp, logDatetime );
+                temperatures.add( temperature );
             }
 
         }
@@ -107,20 +124,82 @@ public class TemperatureDaoImpl implements TemperatureDAO
 
         }
 
-        return temperature;
+        return temperatures;
+
 
     }
 
     @Override
-    public ArrayList<Temperature> getTemperatures( int amount )
+    public ArrayList<Temperature> getTemperatures( Date start, Date end ) throws DAOException
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
+        if ( start == null || end == null )
+        {
+            throw new IllegalArgumentException( "Date range start or end object(s) is null." );
+        }
 
-    @Override
-    public ArrayList<Temperature> getTemperatures( Date start, Date end )
-    {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        Connection conn = DB.getConnection();
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        ArrayList temperatures = new ArrayList();
+
+        try
+        {
+
+            ps = conn.prepareStatement( SQL_SELECT_DATERANGE_LATEST_TEMPERATURES );
+            ps.setTimestamp( 1, new Timestamp( start.getTime() ) );
+            ps.setTimestamp( 2, new Timestamp( end.getTime() ) );
+            resultSet = ps.executeQuery();
+
+            while ( resultSet.next() )
+            {
+
+                long id = resultSet.getLong( "id" );
+                float mjTemp = resultSet.getFloat( "mjtemp" );
+                float rjTemp = resultSet.getFloat( "rjtemp" );
+                float ambientTemp = resultSet.getFloat( "ambienttemp" );
+                Date logDatetime = new java.util.Date( resultSet.getTimestamp( "loggedtime" ).getTime() );
+
+                Temperature temperature = new Temperature( id, mjTemp, rjTemp, ambientTemp, logDatetime );
+                temperatures.add( temperature );
+            }
+
+        }
+        catch ( SQLException ex )
+        {
+            throw new DAOException( "SQL Exception occured during inserting temperature data into database.", ex );
+        }
+        finally
+        {
+
+            if ( resultSet != null )
+            {
+                try
+                {
+                    resultSet.close();
+                }
+                catch ( SQLException ex )
+                {
+                    throw new DAOException( "Error occured while closing resultset object.", ex );
+                }
+            }
+
+            if ( ps != null )
+            {
+                try
+                {
+                    ps.close();
+                }
+                catch ( SQLException ex )
+                {
+                    throw new DAOException( "Error occured while closing prepared statement object", ex );
+                }
+            }
+
+            DB.closeConnection( conn );
+
+        }
+
+        return temperatures;
     }
 
     /**
@@ -146,7 +225,10 @@ public class TemperatureDaoImpl implements TemperatureDAO
                 ps.setDouble( 1, temperature.getMjTemperature() );
                 ps.setDouble( 2, temperature.getRjTemperature() );
                 ps.setDouble( 3, temperature.getAmbientTemperature() );
-                ps.setDate( 4, new java.sql.Date( temperature.getLogDatatime().getTime() ) );
+
+                java.sql.Timestamp logTime = new java.sql.Timestamp( temperature.getLogDatatime().getTime() );
+
+                ps.setTimestamp( 4, logTime );
 
                 int resultRows = ps.executeUpdate();
 
@@ -196,18 +278,9 @@ public class TemperatureDaoImpl implements TemperatureDAO
                         throw new DAOException( "Error occured while closing prepared statement object", ex );
                     }
                 }
+                DB.closeConnection( conn );
 
-                if ( conn != null )
-                {
-                    try
-                    {
-                        conn.close();
-                    }
-                    catch ( SQLException ex )
-                    {
-                        throw new DAOException( "Error occured while closing DB connection.", ex );
-                    }
-                }
+
 
             }
 

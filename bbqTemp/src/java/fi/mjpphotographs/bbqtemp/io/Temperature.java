@@ -25,15 +25,29 @@ import java.util.HashMap;
 public class Temperature
 {
 
+    /**
+     * database autoincrement value
+     */
+    private long id;
+    
     public Temperature(){}
     
-    public Temperature (float mjTemperature, float rjTemperature, float ambientTemperature, Date logDatatime ) {
+    public Temperature (long id, float mjTemperature, float rjTemperature, float ambientTemperature, Date logDatatime ) {
         this.mjTemperature = mjTemperature;
         this.rjTemperature = rjTemperature;
         this.ambientTemperature = ambientTemperature;
         this.logDatatime = logDatatime;
-        
-    
+        this.id = id;
+    }
+
+    public long getId()
+    {
+        return id;
+    }
+
+    public void setId( long id )
+    {
+        this.id = id;
     }
     
     /**
