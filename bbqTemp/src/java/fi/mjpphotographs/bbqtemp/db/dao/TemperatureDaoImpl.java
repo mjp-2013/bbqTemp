@@ -280,10 +280,7 @@ public class TemperatureDaoImpl implements TemperatureDAO
                 }
                 DB.closeConnection( conn );
 
-
-
             }
-
 
         }
         else
@@ -291,11 +288,6 @@ public class TemperatureDaoImpl implements TemperatureDAO
             // should this be NPE instead?
             throw new IllegalArgumentException( "Temperature parameter object was null." );
         }
-
-
-
-
-
 
     }
 }
