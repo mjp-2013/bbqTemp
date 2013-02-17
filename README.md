@@ -13,4 +13,4 @@ Database (postgresql)
 
 Target is to make standalone software for RPI (filebased db, integrated application server etc).
 
-Should be usable in summer 2013 (fan on / off on hardcoded temperature works now atleast)
+Should be usable in summer 2013 (current status: fan on / off logic works (temperatures in cofigure), simple hourly graph included)
