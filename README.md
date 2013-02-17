@@ -14,5 +14,5 @@ Target is to make standalone software for RPI (filebased db, integrated applicat
 
 Should be usable in summer 2013 
 
-Current status: temperature logging from thermocouple, fan on / off logic works (temperatures in config file), 
+Current status: temperature logging from thermocouple works (MJ and RJ temps), fan on / off logic works (logic temperatures in config file), 
 simple hourly graph included... More to come.
