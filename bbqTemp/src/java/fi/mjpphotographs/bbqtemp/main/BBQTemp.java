@@ -15,6 +15,9 @@
  */
 package fi.mjpphotographs.bbqtemp.main;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.wiringpi.Spi;
 import fi.mjpphotographs.bbqtemp.logic.DataLogger;
 import java.io.File;
 import java.io.IOException;
@@ -89,11 +92,6 @@ public class BBQTemp extends HttpServlet
             throws ServletException, IOException
     {
 
-
-        // TODO tämä uusiks... jos ei JSON niin sit käynnistyy poller, muuten normi setit. 
-
-
-
         if ( null != request.getParameter( "json" ) )
         {
             jsonHandler.executeRequest( request, response );
@@ -142,6 +140,7 @@ public class BBQTemp extends HttpServlet
             }
 
         }
+
 
     }
 
