@@ -59,11 +59,15 @@
 
         </div> <!-- /container -->
         <div id="chart" style="height:400px; width:1260px;"></div>
-<!--
-        <button class="btn btn-primary btn-small disabled" id="buttonHourlyData">Hourly data</button>
-        <button class="btn btn-primary btn-small" id="buttonAllData">Alltime data</button>
+
+        <button class="btn btn-primary btn-small" id="button1hData">1h data</button>
+        <button class="btn btn-primary btn-small" id="button2hData">2h data</button>
+        <button class="btn btn-primary btn-small" id="button4hData">4h data</button>
+        <button class="btn btn-primary btn-small" id="button8hData">8h data</button>
+        <button class="btn btn-primary btn-small" id="button12hData">12h data</button>
+        <button class="btn btn-primary btn-small" id="button24hData">24h data</button>
         <button class="btn btn-primary btn-small" id="buttonRefresh"><i class="icon-white icon-refresh"></i> Refresh</button>
--->
+
 
 
 
@@ -76,11 +80,28 @@
         <script class="code" type="text/javascript">
 
             $(document).ready(function(){
-               
-                var ajaxUrl = "../BBQTemp?json=getLastHourData";
+
+                var ajaxUrlCurrent = "../BBQTemp?json=getXhourlyData&hours=1";
             
-                $.getJSON(ajaxUrl,function (data) {
-                    $.jqplot('chart', [data[0].data], {
+                function updateGraph(ajaxUrl) {
+                    ajaxUrlCurrent = ajaxUrl;
+                    
+                    $.ajax({
+                        async: false,
+                        url: ajaxUrl,
+                        dataType:"json",
+                        success: function(data) {
+                            drawGraph(data);
+                        }
+                    }
+                )};
+                    
+                function drawGraph(data) {
+                    $('#chart').html("");
+                    $.jqplot(
+                    'chart',
+                    [data[0].data],
+                    {
                         title:'Last 60 minutes temperatures',
                         axes:{
                             xaxis:{
@@ -102,8 +123,82 @@
                                     smooth: true
                                 }
                             }]
-                    });
+                        
+                    }
+                )};
+
+                $("#button24hData").on("click", function() {
+                    var ajaxUrl = "../BBQTemp?json=getXhourlyData&hours=24";
+                    updateGraph(ajaxUrl);
+                    return false;
                 });
+                        
+                $("#button1hData").on("click", function() {
+                    var ajaxUrl = "../BBQTemp?json=getXhourlyData&hours=1";
+                    updateGraph(ajaxUrl);
+
+                    return false;
+                });
+                  $("#button2hData").on("click", function() {
+                    var ajaxUrl = "../BBQTemp?json=getXhourlyData&hours=2";
+                    updateGraph(ajaxUrl);
+
+                    return false;
+                });
+                  $("#button4hData").on("click", function() {
+                    var ajaxUrl = "../BBQTemp?json=getXhourlyData&hours=4";
+                    updateGraph(ajaxUrl);
+
+                    return false;
+                });
+                  $("#button8hData").on("click", function() {
+                    var ajaxUrl = "../BBQTemp?json=getXhourlyData&hours=8";
+                    updateGraph(ajaxUrl);
+
+                    return false;
+                });
+                  $("#button12hData").on("click", function() {
+                    var ajaxUrl = "../BBQTemp?json=getXhourlyData&hours=12";
+                    updateGraph(ajaxUrl);
+
+                    return false;
+                });
+       
+                $("#buttonRefresh").on("click", function() {
+                    updateGraph(ajaxUrlCurrent);
+                    return false;
+                });
+            
+                /*
+                        $.getJSON(ajaxUrl,function (data) {
+                            plot1 = $.jqplot('chart', [data[0].data], {
+                                title:'Last 60 minutes temperatures',
+                                axes:{
+                                    xaxis:{
+                                        renderer:$.jqplot.DateAxisRenderer,
+                                        tickOptions:{formatString:'%H:%M'},
+                                        tickInterval:120000
+                                    }
+                                },
+                                grid: {
+       
+                                    background: '#ffffff'      // grid background
+        
+                                },
+
+                                series:[{
+                                        lineWidth:1,
+                                        markerOptions:{style:'circle',size:5},
+                                        rendererOptions: {
+                                            smooth: true
+                                        }
+                                    }]
+                            });
+                        });
+                    
+                 
+                 *       */
+                updateGraph(ajaxUrlCurrent);
             });
         </script>
     </body>

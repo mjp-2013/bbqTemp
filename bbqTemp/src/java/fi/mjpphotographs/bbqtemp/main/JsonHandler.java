@@ -57,14 +57,26 @@ class JsonHandler
     {
         String jsonActionName = request.getParameter( "json" );
 
-        if ( null != jsonActionName && jsonActionName.equalsIgnoreCase( "getLastHourData" ) )
+        if ( null != jsonActionName && jsonActionName.equalsIgnoreCase( "getXhourlyData" ) )
         {
-            getData( request, response, 60 );
+            String hoursStr = request.getParameter( "hours" );
+            int hours = 1; //defaults for one hour graph
+           
+            if ( hoursStr != null )
+            {
+                try
+                {
+                  hours = Integer.parseInt( hoursStr );    
+                }
+                catch(NumberFormatException e) { 
+                     // todo exception or loggin
+                    // nothing do ... continues with default value
+                }
+            }
+            
+            getData( response, hours * 60 );
         }
-        else if ( null != jsonActionName && jsonActionName.equalsIgnoreCase( "getAlltimeData" ) )
-        {
-            getData( request, response, -1 );
-        }
+       
     }
 
     /**
@@ -74,14 +86,14 @@ class JsonHandler
      * @param response
      * @param minutes how many minutes of data is returned. -1 for all data.
      */
-    private void getData( HttpServletRequest request, HttpServletResponse response, int minutes )
+    private void getData( HttpServletResponse response, int minutes )
     {
         List<Temperature> temperatures = new ArrayList();
         Date startDate = null;
         if ( minutes == -1 )
         {
             //TODO think better aproach of this, possibilities for errors.. RPI resets its time epoch or last used time (fake hardware clock), but this should get all data if db is not corrupted or datime is not chaged pre 1970s.
-            startDate = new Date( 0 );  
+            startDate = new Date( 0 );
         }
         else
         {
@@ -101,7 +113,10 @@ class JsonHandler
         }
 
         //Making datagroup much smaller (calculating averages of every minute log events or so)
-        temperatures = averageData( 30, temperatures );
+        // we need approx 30 ticks per chart so we need to add more values for each tick averaging array 
+        int averageMultiplier = minutes / 2;
+        
+        temperatures = averageData( averageMultiplier, temperatures );
 
         String json = constructJsonFromTemperatures( temperatures );
 
