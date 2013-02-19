@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 class JsonHandler
 {
 
-    static Logger logger = Logger.getLogger( DataLogger.class );
+    static Logger logger = Logger.getLogger( JsonHandler.class );
     private TemperatureDAO tempDAO;
     private Configuration bbqTempConfig = null;
 
@@ -99,7 +99,6 @@ class JsonHandler
         {
             // get selected amount of minutes
             startDate = new Date( System.currentTimeMillis() - minutes * 60 * 1000 );
-
         }
 
         try
@@ -113,11 +112,12 @@ class JsonHandler
         }
 
         //Making datagroup much smaller (calculating averages of every minute log events or so)
-        // we need approx 30 ticks per chart so we need to add more values for each tick averaging array 
+        //Making tick amount for about 30 per chart.Datalogger logs about 30 logs per minute.
         int averageMultiplier = minutes / 2;
         
         temperatures = averageData( averageMultiplier, temperatures );
-
+        logger.debug("Chart array size: " + temperatures.size() + " average multplier size was:"+averageMultiplier);
+        
         String json = constructJsonFromTemperatures( temperatures );
 
         response.setContentType( "application/json" );
