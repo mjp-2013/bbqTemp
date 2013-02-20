@@ -60,10 +60,10 @@
 
             <h1>Temperature charts</h1>
 
-<div id="chart" style="height:400px; width:1220px;"></div>
+            <div id="chart" style="height:400px; width:1220px;"></div>
 
         </div> <!-- /container -->
-        
+        <div id="push"></div>
         
        </div> 
        <div id="footer">
@@ -127,9 +127,12 @@
                     }
                 )};
 
+            var refreshId = setInterval(function(){
+                    updateGraph(ajaxUrlCurrent, "Last 60 minutes temperatures, refresh every 10 seconds");
+            }, 10000);
 
-       
-                setInterval(updateGraph(ajaxUrlCurrent, "Last 60 minutes temperatures, refresh every 10 seconds"), 10000);
+
+                
             });
         </script>
     </body>
