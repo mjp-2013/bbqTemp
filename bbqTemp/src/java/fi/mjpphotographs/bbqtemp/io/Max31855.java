@@ -68,6 +68,8 @@ public class Max31855 implements TemperatureDevice
         byte[] spiData = new byte[ 4 ];
         Temperature temperature = null;
         
+        //TODO get pin from config
+        
         int setupReturnValue = Spi.wiringPiSPISetup( 1, 1000000 );
         if ( setupReturnValue != -1 )
         {
@@ -110,6 +112,8 @@ public class Max31855 implements TemperatureDevice
 
     //TODO exception throwing if MAX31855 failure bits are set.
     
+   
+    
     /**
      * Convert SPI byte array data (4bytes, 32bits) to Temperature object (MJ and RJ temperatures suplied) Needs heavy refactoring due very hackish code...
      * @param spiData
@@ -131,14 +135,14 @@ public class Max31855 implements TemperatureDevice
             //TODO exception and error logging for: OC,SCG,SCV faults.
         }
         
-        // for MJ temperatures.
+        // for MT temperatures from MAX 31885.
         String mjTemp = toBinary( spiData ).substring( 0, 14 );
         String integerValueMj = mjTemp.substring( 1, 12 );
         String negativeBitMj = mjTemp.substring( 0, 1 );
         String decimalValueMj = mjTemp.substring( 12 );
         float mj = getFloat (integerValueMj,decimalValueMj,negativeBitMj, 0.25f );
         
-        // for RJ temperatures
+        // for RJ temperatures from MAX 31885
         String rjTemp = toBinary( spiData ).substring( 16, 28 );
         String integerValueRj = rjTemp.substring( 1, 8 );
         String negativeBitRj = rjTemp.substring( 0, 1 );

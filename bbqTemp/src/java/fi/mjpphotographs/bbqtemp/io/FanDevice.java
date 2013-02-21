@@ -22,8 +22,6 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-import fi.mjpphotographs.bbqtemp.logic.DataLogger;
-import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 
