@@ -139,6 +139,7 @@ public class DataLogger implements Runnable
 
             try
             {
+                //TODO interval form confing..
                 Thread.sleep( 2000 );
             }
             catch ( InterruptedException ie )

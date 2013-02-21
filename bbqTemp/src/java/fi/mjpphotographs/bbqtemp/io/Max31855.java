@@ -41,34 +41,11 @@ public class Max31855 implements TemperatureDevice
     public Temperature getTemperature()
     {
 
-        // old implemtation with max31855.py script
-        /**
-         * try {
-         *
-         * Process process = Runtime.getRuntime().exec(
-         * "/home/pi/temp/max31855/max31855.py" ); DataInputStream
-         * dataInputStream = new DataInputStream( process.getInputStream() );
-         * try { String tempValues; // TODO replace with pi4j // deprecated,
-         * need to fix this... tempValues = dataInputStream.readLine();
-         *
-         * if ( tempValues != null ) { float rj; float mj; int position =
-         * tempValues.indexOf( ":" ); mj = Float.parseFloat(
-         * tempValues.substring( 0, position - 1 ) ); rj = Float.parseFloat(
-         * tempValues.substring( position + 1 ) );
-         *
-         * tempData.setMjTemperature( mj ); tempData.setRjTemperature( rj );
-         * tempData.setLogDatatime( new java.util.Date() ); }
-         *
-         * }
-         * catch ( IOException e ) { logger.fatal( "IO-error during the reading
-         * of temperature values from SPI device via python script.", e ); } }
-         * catch ( IOException e1 ) { logger.fatal( "Cannot find or access
-         * python script.", e1 ); }
-         */
+   
         byte[] spiData = new byte[ 4 ];
         Temperature temperature = null;
         
-        //TODO get pin from config
+        //TODO get pin from init...
         
         int setupReturnValue = Spi.wiringPiSPISetup( 1, 1000000 );
         if ( setupReturnValue != -1 )
