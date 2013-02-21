@@ -34,6 +34,7 @@
             <enabled>true</enabled>
             <compensation>0.0</compensation>
             <chip>MAX31885</chip>
+            <!-- //TODO class loader for implementation selecting...-->
         </sensor>
         <sensor id="2">
             <!-- Raspberry pin number for selected chip (could be GPIO pin, or SPI pin or I2C id, onewire id etc..-->
@@ -41,7 +42,7 @@
                 <pin>0</pin>
             </pins>
             <display_name>Smoker temperature</display_name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
             <compensation>0.0</compensation>
             <chip>MAX31885</chip>
         </sensor>     
@@ -51,7 +52,7 @@
                 <pin>y..etc</pin> 
             </pins>
             <display_name>Smoker temperature</display_name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
             <compensation>0.0</compensation>
             <chip>DS18S20</chip>
         </sensor>        
