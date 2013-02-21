@@ -23,6 +23,9 @@
     <target_temperature>118</target_temperature>
     <poller_interval>2</poller_interval>
 
+    <!-- //TODO leds, LCD, etc configs..-->
+
+
     <!-- Id 1= smoker thermocouple, id2 = meat thermocouple, id3 = ambient temperature, idn = future (meat 2, meat 3, other)..-->
     <sensors>
         <sensor id="1">
@@ -41,7 +44,7 @@
             <pins>
                 <pin>0</pin>
             </pins>
-            <display_name>Smoker temperature</display_name>
+            <display_name>Meat temperature</display_name>
             <enabled>false</enabled>
             <compensation>0.0</compensation>
             <chip>MAX31885</chip>
@@ -51,7 +54,7 @@
                 <pin>x</pin>
                 <pin>y..etc</pin> 
             </pins>
-            <display_name>Smoker temperature</display_name>
+            <display_name>Ambient temperature</display_name>
             <enabled>false</enabled>
             <compensation>0.0</compensation>
             <chip>DS18S20</chip>
