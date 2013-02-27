@@ -19,7 +19,6 @@ import fi.mjpphotographs.bbqtemp.db.dao.DAOException;
 import fi.mjpphotographs.bbqtemp.db.dao.TemperatureDAO;
 import fi.mjpphotographs.bbqtemp.db.dao.TemperatureDaoImpl;
 import fi.mjpphotographs.bbqtemp.io.Temperature;
-import fi.mjpphotographs.bbqtemp.logic.DataLogger;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,13 +71,43 @@ class JsonHandler
                      // todo exception or loggin
                     // nothing do ... continues with default value
                 }
-            }
-            
+            } 
             getData( response, hours * 60 );
         }
+        
+        else if (null != jsonActionName && jsonActionName.equalsIgnoreCase( "getConfigurationData" ))
+        {
+           // calls for json representation of configuration data
+            getConfigData(response, request);
+        }
+        else if (null != jsonActionName && jsonActionName.equalsIgnoreCase( "setConfigurationData" ))
+        {
+          // sets json configuration with new vales. Used only for main switches etc.
+            setConfigData(response, request);
+        }
+        else if (null != jsonActionName && jsonActionName.equalsIgnoreCase( "getDataByName" ))
+        {
+          // Get json data for specific items, like main page trending items etc. 
+            getDataByName(response, request);
+        }
+        
        
     }
 
+   private void getConfigData(HttpServletResponse response,HttpServletRequest request){
+       //TODO implementation
+   } 
+   
+   private void setConfigData(HttpServletResponse response, HttpServletRequest request){
+       //TODO implementation
+   }
+    
+   private void getDataByName(HttpServletResponse response, HttpServletRequest request){
+       //TODO implementation
+   }
+   
+   
+    
     /**
      * Returns selected hours of temperature data.
      *

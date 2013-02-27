@@ -18,21 +18,67 @@
 --%>
 <%@include file="header.jsp" %>
 <div class="container">
+    <ul class="nav nav-tabs" id="configuretab">
+        <li><a href="#current" data-toggle="tab">Smoking</a></li>
+        <li><a href="#custom" data-toggle="tab">Custom</a></li>
+    </ul> 
 
-<%
-    
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="current">
+            <p>
+                <label for="amount">Max oven temperature:</label>
+                <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" />
+            </p>
+            <div id="slider-range-max"></div>
 
 
-%>
-    
-    
+        </div>
+        <div class="tab-pane" id="custom">
+           Temperature type
+           <select>
+                <option>Celsius</option>
+                <option>Kelvin</option>
+                
+            </select>
+            
+            
+
+        </div>
+    </div>
+
+
 </div> <!-- /container -->
+
+
+
 <%@include file="footer.jsp" %>   
+
+
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap/js/bootstrap.min.js"></script>
-
+<script src="js/jquery-ui.min.js"></script>
 <script>
+    $(document).ready(function(){  
+        $('#configuretab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+    });
     
-
+    $(function() {
+        $( "#slider-range-max" ).slider({
+            range: "max",
+            min: 10,
+            max: 450,
+            value: 125,
+            step: 2.5,
+            slide: function( event, ui ) {
+                $( "#amount" ).val( ui.value );
+            }
+        });
+        $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+    });
+    
     
 </script>

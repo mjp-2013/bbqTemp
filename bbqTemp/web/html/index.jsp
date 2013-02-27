@@ -24,6 +24,8 @@
         <p>Select function from the top</p>
     </div>
 
+    <!--  Get values from ajax -->
+    
     <div class="row">
         <div class="span4">
             <h2>OVEN TEMPERATURE</h2>

@@ -29,7 +29,8 @@
         <link href="js/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="js/bootstrap/css/footer.css" rel="stylesheet">
         <link href="js/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-
+        <link href="js/css/flick/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
+        
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
           <script src="../assets/js/html5shiv.js"></script>
@@ -56,7 +57,7 @@
                         <a class="brand" href="#">BBQ Temp</a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li class="active"><a href="index.jsp" >Home</a></li>
+                                <li><a href="index.jsp" >Home</a></li>
 
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Charts<b class="caret"></b></a>
