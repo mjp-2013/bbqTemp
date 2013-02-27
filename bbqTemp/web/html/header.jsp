@@ -1,4 +1,4 @@
-<!-
+<%--
 /**
 * Copyright 2013 M.Pitkänen
 *
@@ -15,7 +15,8 @@
 * the License.
 */
 
--->
+--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,7 +28,7 @@
 
         <link href="js/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="js/bootstrap/css/footer.css" rel="stylesheet">
-        <link href=".js/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="js/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -55,71 +56,20 @@
                         <a class="brand" href="#">BBQ Temp</a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li class="active"><a href="index.html">Home</a></li>
+                                <li class="active"><a href="index.jsp" >Home</a></li>
 
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Charts<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="temps.html">Hourly Charts</a></li>
-                                        <li><a href="temps-live.html">Live Charts</a></li>
+                                        <li><a href="temps.jsp">Hourly Charts</a></li>
+                                        <li><a href="temps-live.jsp">Live Charts</a></li>
 
                                     </ul>
                                 </li>
-                                <li><a href="settings.html">Settings</a></li>
+                                <li><a href="settings.jsp">Settings</a></li>
 
                             </ul>
                         </div><!--/.nav-collapse -->
                     </div>
                 </div>
             </div>
-
-            <div class="container">
-                <div class="hero-unit">
-                    <h1>BBQ Temp controller</h1>
-                    <p>Select function from the top</p>
-                </div>
-
-                <div class="row">
-                    <div class="span4">
-                        <h2>OVEN TEMPERATURE</h2>
-                        <p>BIG SYMBOL WITH CURRENT OVEN TEMPERATURE AND UP OR DOWN SYMBOL GOES HERE</p>
-
-                    </div>
-                    <div class="span4">
-                        <h2>MEAT TEMPERATURE</h2>
-                        <p> BIG SYMBOL WITH CURRENT MEAT TEMPERATURE AND UP OR DOWN SYMBOL GOES HERE</p>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span4">
-                        <h3>Ambien temperture</h3>
-                        <p>maller symbols with ambient temperatures, data time etc..</p>
-
-                    </div>
-                    <div class="span4">
-                        <h3>Current time etc..</h3>
-                        <p> maller symbols with ambient temperatures, data time etc..</p>
-
-                    </div>
-                </div>
-
-              
-            </div> <!-- /container -->
-            <div id="push"></div>
-        </div>
-
-
-        <div id="footer">
-            <div class="container">
-                <p class="muted credit"><p>BBQTemp by M.Pitkänen 2013</p>
-                <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a></p>
-            </div>
-        </div>
-
-
-
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap/js/bootstrap.min.js"></script>
-    </body>
-</html>
