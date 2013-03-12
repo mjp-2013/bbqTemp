@@ -19,7 +19,7 @@
 
 
 <user-config>
-    <!--temperature type (c=celsius, k=kelvin) -->
+    <!--temperature type (c=celsius, k=kelvin, f=fahrenheit-->
     <temperature_unit>c</temperature_unit>
     <max_temperature>31</max_temperature>
     <target_temperature>29</target_temperature>

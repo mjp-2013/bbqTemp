@@ -28,115 +28,114 @@ import org.apache.log4j.Logger;
  */
 public class FanControl implements ControlEngine
 {
+
     static Logger logger = Logger.getLogger( FanControl.class );
-    
-    
     /**
      * Fan device object which handles the actual JNI calls to GPIO board.
      */
     FanDevice fan = null;
-    
     /**
      * Is the FanControl initialized.
      */
     private boolean initalized = false;
-
     /**
      * Configuration object for BBQTemp.
      */
     private Configuration bbqTempConfig = null;
-    
-    public FanControl(){}
-   
+
+    public FanControl()
+    {
+    }
     /**
      * Fan CutOff temperature
      */
     private float maxTemperature = 0;
-    
     /**
      * Max temperature in smoker
      */
-    private float targetTemperature = 0; 
-
+    private float targetTemperature = 0;
     /**
      * Temperature dao object for persistent activity.
      */
     private TemperatureDAO tempDAO;
-    
+
     @Override
     public void initControlEngine( Configuration bbqTempConfig, TemperatureDAO tempDAO )
     {
         logger.debug( "Entering init ControlEngine." );
-        if (!initalized)
+        if ( !initalized )
         {
             logger.debug( "Control engine initializing started." );
-            
+
             this.bbqTempConfig = bbqTempConfig;
-            fan = new FanDevice( this.bbqTempConfig );   
+            fan = new FanDevice( this.bbqTempConfig );
             logger.debug( "Fan Device initalized." );
-            
-            maxTemperature = bbqTempConfig.getFloat( "max_temperature");
-            targetTemperature = bbqTempConfig.getFloat( "target_temperature");
-            
-            logger.debug ("Max temperature set from configuration:" + maxTemperature );
-            logger.debug ("Targett emperature set from configuration:" + targetTemperature );
-            
+
             // refrence to TemperatureDAO object.
-            this.tempDAO  =tempDAO;
-            
+            this.tempDAO = tempDAO;
+
             initalized = true;
         }
         else
         {
-          logger.error( "FanControl already initialized." );
-          throw new IllegalStateException ("FanControl already initalized.");  
-        }   
-   
+            logger.error( "FanControl already initialized." );
+            throw new IllegalStateException( "FanControl already initalized." );
+        }
+
     }
 
     @Override
     public void handleDevice()
     {
-        logger.debug("Device handler called.");
-        
+        logger.debug( "Device handler called." );
+
         Temperature temperature = null;
         try
         {
             //TODO get latest temp values from DB
-            
+
             temperature = tempDAO.getLatestTemperature();
         }
         catch ( DAOException ex )
         {
-           logger.error( "Cannot retrieve latest temperature data from data persistance.",ex );
-           //TODO DEVICE EXPTION HERE...
+            logger.error( "Cannot retrieve latest temperature data from data persistance.", ex );
+            //TODO DEVICE EXPTION HERE...
         }
+
+        // read temperature values from configuration... 
+        // TODO Had to to better value initalization if config are changed. Read new values if config are really changed...
         
-        
+        maxTemperature = bbqTempConfig.getFloat( "max_temperature" );
+        targetTemperature = bbqTempConfig.getFloat( "target_temperature" );
+
+        logger.debug( "Max temperature set from configuration:" + maxTemperature );
+        logger.debug( "Targett emperature set from configuration:" + targetTemperature );
+
+
+
         //TODO better logic
-        
-        
-        if (null != temperature && temperature.getMjTemperature() < this.maxTemperature )
+
+
+        if ( null != temperature && temperature.getMjTemperature() < this.maxTemperature )
         {
             fan.startFan();
-            logger.debug(  "Fan started. Latest reading:" + temperature.getMjTemperature() );
+            logger.debug( "Fan started. Latest reading:" + temperature.getMjTemperature() );
         }
-        else if (null != temperature && temperature.getMjTemperature() >= this.maxTemperature )
+        else if ( null != temperature && temperature.getMjTemperature() >= this.maxTemperature )
         {
             fan.stopFan();
-            logger.debug("Fan stopped. Latest reading:"+ temperature.getMjTemperature());
+            logger.debug( "Fan stopped. Latest reading:" + temperature.getMjTemperature() );
         }
         else
         {
- 
-            logger.debug("Fan exception. Latest reading:"+ temperature.getMjTemperature());
-            throw new IllegalArgumentException ("Temperature object was null");
-            
+
+            logger.debug( "Fan exception. Latest reading:" + temperature.getMjTemperature() );
+            throw new IllegalArgumentException( "Temperature object was null" );
+
         }
-  
+
     }
 
-  
     @Override
     public boolean isInitialized()
     {

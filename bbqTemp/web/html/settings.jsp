@@ -28,25 +28,29 @@
         <div class="tab-pane active" id="current">
             <p>
                 <label for="amount">Max oven temperature:</label>
-                <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" />
+                <input type="text" id="maxTempAmount" style="border: 0; color: #f6931f; font-weight: bold;" />
             </p>
             <div id="slider-range-max"></div>
 
 
         </div>
         <div class="tab-pane" id="custom">
-           Temperature type
-           <select>
-                <option>Celsius</option>
-                <option>Kelvin</option>
-                
+            Temperature type
+            <select id="temperatureType">
+                <option value="c">Celsius</option>
+                <option value="f">Fahrenheit</option>
             </select>
-            
-            
-
         </div>
-    </div>
 
+
+
+
+
+    </div>
+    <div id="buttons">
+        <button id="saveButton">Save</button>
+
+    </div>
 
 </div> <!-- /container -->
 
@@ -64,21 +68,66 @@
             e.preventDefault();
             $(this).tab('show');
         })
+        
+        $("#saveButton").on("click", function() {
+            var maxTemperature = $( "#slider-range-max" ).slider( "value" );
+            var tempType = $("#temperatureType option:selected").val();
+            
+            //call the server and store the values.
+            
+            $.get("../BBQTemp?json=setConfigurationData", { 
+                maxTemperatureValue: maxTemperature, 
+                tempTypeValue: tempType
+              
+          
+            })
+            .done(function(data) {
+                
+           
+                
+                // Server should respond <result>ok</result>
+      
+               if (data == "<result>ok</result>")
+                {
+                    //todo MODAL JQUERY/BOOTSTRAP ALERT BOX
+                    alert ("Settings Saved succesfully!");
+                        
+                }
+                else
+                {
+                    //todo MODAL JQUERY/BOOTSTRAP ALERT BOX
+                    alert ("Settings save failed!");
+                }
+              
+                
+                
+            },"html");
+            
+            
+            
+            
+            
+        });
+        
+        
+        
     });
     
-    $(function() {
-        $( "#slider-range-max" ).slider({
-            range: "max",
-            min: 10,
-            max: 450,
-            value: 125,
-            step: 2.5,
-            slide: function( event, ui ) {
-                $( "#amount" ).val( ui.value );
-            }
-        });
-        $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+$(function() {
+
+    //TODO get current value from config...
+    $( "#slider-range-max" ).slider({
+        range: "max",
+        min: 10,
+        max: 450,
+        value: 125,
+        step: 2.5,
+        slide: function( event, ui ) {
+            $( "#maxTempAmount" ).val( ui.value );
+        }
     });
+    $( "#maxTempAmount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+});
     
     
 </script>

@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.configuration.Configuration;
@@ -99,7 +100,33 @@ class JsonHandler
    } 
    
    private void setConfigData(HttpServletResponse response, HttpServletRequest request){
-       //TODO implementation
+       
+       //TODO value validity checks here...
+       String maxTemperature = request.getParameter( "maxTemperatureValue" );
+       String temperatureUnit = request.getParameter( "tempTypeValue");
+       
+       logger.debug("Tried to set configuration value:max_temperature to:" +maxTemperature );
+       logger.debug("Tried to set configuration value:temperature_unit to:" +temperatureUnit );
+       bbqTempConfig.setProperty(  "max_temperature", maxTemperature );
+       bbqTempConfig.setProperty(  "temperature_unit", temperatureUnit );
+       logger.debug("Read configuration max_temperature value after set:" + bbqTempConfig.getFloat( "max_temperature") );
+       logger.debug("Read configuration temperature_unit value after set:" + bbqTempConfig.getString( "temperature_unit") );
+ 
+       
+        response.setContentType( "text/html" );
+        response.setCharacterEncoding( "UTF-8" );
+        try
+        {
+            response.getWriter().write( "<result>ok</result>" );
+        }
+        catch ( IOException ex )
+        {
+             logger.error("Error while writing respone xml to ajax request", ex );
+ 
+        }
+       
+      
+   
    }
     
    private void getDataByName(HttpServletResponse response, HttpServletRequest request){
