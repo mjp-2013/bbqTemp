@@ -95,7 +95,7 @@
                 }
                 else
                 {
-                    //todo MODAL JQUERY/BOOTSTRAP ALERT BOX
+                    //todo MODAL JQUERY/BOOTSTRAP ALERT BOX and with error code from server...
                     alert ("Settings save failed!");
                 }
               
