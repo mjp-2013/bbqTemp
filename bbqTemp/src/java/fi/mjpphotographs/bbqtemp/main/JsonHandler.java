@@ -15,6 +15,7 @@
  */
 package fi.mjpphotographs.bbqtemp.main;
 
+import com.google.gson.Gson;
 import fi.mjpphotographs.bbqtemp.db.dao.DAOException;
 import fi.mjpphotographs.bbqtemp.db.dao.TemperatureDAO;
 import fi.mjpphotographs.bbqtemp.db.dao.TemperatureDaoImpl;
@@ -23,7 +24,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -95,8 +98,33 @@ class JsonHandler
        
     }
 
+   /**
+    * REturns commong configuration items (if no specific parameter is requested with request parameter cfgParamName)
+    * @param response
+    * @param request 
+    */
    private void getConfigData(HttpServletResponse response,HttpServletRequest request){
-       //TODO implementation
+        
+        //TODO only selected item to config map..
+       
+        // collect common configs to this map and send it to client as json
+        Map <String, String>commonCfg = new HashMap();
+        commonCfg.put("max_temperature",bbqTempConfig.getString( "max_temperature") );
+        commonCfg.put("temperature_unit",bbqTempConfig.getString( "temperature_unit") );
+        
+       
+        response.setContentType( "application/json" );
+        response.setCharacterEncoding( "UTF-8" );
+        try
+        {
+            response.getWriter().write( new Gson().toJson( commonCfg ) );
+        }
+        catch ( IOException ex )
+        {
+             logger.error("Error while writing Configuration GSON to response.", ex );
+ 
+        }
+       
    } 
    
    private void setConfigData(HttpServletResponse response, HttpServletRequest request){
@@ -117,6 +145,7 @@ class JsonHandler
         response.setCharacterEncoding( "UTF-8" );
         try
         {
+            //TODO JSON OUTPUT RESULT:ok
             response.getWriter().write( "<result>ok</result>" );
         }
         catch ( IOException ex )
