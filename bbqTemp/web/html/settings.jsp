@@ -68,7 +68,7 @@
             e.preventDefault();
             $(this).tab('show');
         })
-        
+  
         $("#saveButton").on("click", function() {
             var maxTemperature = $( "#slider-range-max" ).slider( "value" );
             var tempType = $("#temperatureType option:selected").val();
@@ -77,17 +77,13 @@
             
             $.get("../BBQTemp?json=setConfigurationData", { 
                 maxTemperatureValue: maxTemperature, 
-                tempTypeValue: tempType
-              
-          
+                tempTypeValue: tempType  
             })
             .done(function(data) {
-                
-           
-                
+       
                 // Server should respond <result>ok</result>
       
-               if (data == "<result>ok</result>")
+                if (data == "<result>ok</result>")
                 {
                     //todo MODAL JQUERY/BOOTSTRAP ALERT BOX
                     alert ("Settings Saved succesfully!");
@@ -97,37 +93,44 @@
                 {
                     //todo MODAL JQUERY/BOOTSTRAP ALERT BOX and with error code from server...
                     alert ("Settings save failed!");
-                }
-              
-                
-                
-            },"html");
-            
-            
-            
-            
-            
-        });
-        
-        
-        
+                }    
+            },"html");   
+        });   
     });
     
-$(function() {
+    $(function() {
 
-    //TODO get current value from config...
-    $( "#slider-range-max" ).slider({
-        range: "max",
-        min: 10,
-        max: 450,
-        value: 125,
-        step: 2.5,
-        slide: function( event, ui ) {
-            $( "#maxTempAmount" ).val( ui.value );
-        }
+
+        
+       
+    
+       
+    
+        $( "#slider-range-max" ).slider({
+            range: "max",
+            min: 10,
+            max: 450,
+            value: 120,
+            step: 2.5,
+            slide: function( event, ui ) {
+                $( "#maxTempAmount" ).val( ui.value );
+            }
+        });
+        $( "#maxTempAmount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+        
+         $.getJSON('../BBQTemp?json=getConfigurationData', function(data) {
+           
+         
+           $( "#slider-range-max" ).slider("value",data.max_temperature );
+           $( "#maxTempAmount" ).val( data.max_temperature );
+           
+           //data.temperature_unit
+           //temperatureType
+           $("#temperatureType option[value='"+data.temperature_unit+"']").attr("selected", "selected")
+          
+
+        });    
     });
-    $( "#maxTempAmount" ).val( $( "#slider-range-max" ).slider( "value" ) );
-});
     
     
 </script>
