@@ -21,6 +21,6 @@
 <user-config>
     <!--temperature type (c=celsius, k=kelvin, f=fahrenheit-->
     <temperature_unit>c</temperature_unit>
-    <max_temperature>31</max_temperature>
-    <target_temperature>29</target_temperature>
+    <max_temperature>125</max_temperature>
+    <target_temperature>120</target_temperature>
 </user-config>
